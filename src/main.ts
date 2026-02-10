@@ -11,6 +11,7 @@ import {
 // ===== RESTO =====
 import { leyDeSignos } from "./modules/signos.js";
 import { distributiva } from "./modules/distribuitiva.js";
+import { cramer2x2 } from "./modules/sistemas.js";
 
 import {
   diferenciaDeCuadrados,
@@ -18,6 +19,8 @@ import {
   sumaDeCubos,
   trinomioCuadratico
 } from "./modules/factorizacion.js";
+
+import { cramer3x3 } from "./modules/sistemas.js";
 
 import {
   pendiente,
@@ -52,6 +55,28 @@ function mostrarInputs() {
       <label>m</label><input id="m" class="form-control" placeholder="m">
       <label>n</label><input id="n" class="form-control" placeholder="n">
     `;
+  }
+  if (tema.value === "cramer-3x3") {
+      inputsDiv.innerHTML = `
+        
+        <h6>Ecuación 1</h6>
+        <input id="a1" type="number" class="form-control mb-1" placeholder="a₁">
+        <input id="b1" type="number" class="form-control mb-1" placeholder="b₁">
+        <input id="c1" type="number" class="form-control mb-1" placeholder="c₁">
+        <input id="d1" type="number" class="form-control mb-2" placeholder="d₁">
+
+        <h6>Ecuación 2</h6>
+        <input id="a2" type="number" class="form-control mb-1" placeholder="a₂">
+        <input id="b2" type="number" class="form-control mb-1" placeholder="b₂">
+        <input id="c2" type="number" class="form-control mb-1" placeholder="c₂">
+        <input id="d2" type="number" class="form-control mb-2" placeholder="d₂">
+
+        <h6>Ecuación 3</h6>
+        <input id="a3" type="number" class="form-control mb-1" placeholder="a₃">
+        <input id="b3" type="number" class="form-control mb-1" placeholder="b₃">
+        <input id="c3" type="number" class="form-control mb-1" placeholder="c₃">
+        <input id="d3" type="number" class="form-control mb-2" placeholder="d₃">
+      `;
   }
 
   if (tema.value === "exp-neg") {
@@ -106,6 +131,20 @@ function mostrarInputs() {
       <label>m</label><input id="m" type="number" class="form-control">
     `;
   }
+
+  if (tema.value === "cramer-2x2") {
+  inputsDiv.innerHTML = `
+  <h6>Ecuación 1</h6>
+    <label>a₁</label><input id="a1" type="number" class="form-control">
+    <label>b₁</label><input id="b1" type="number" class="form-control">
+    <label>c₁</label><input id="c1" type="number" class="form-control">
+  <h6>Ecuación 2</h6>
+    <label>a₂</label><input id="a2" type="number" class="form-control">
+    <label>b₂</label><input id="b2" type="number" class="form-control">
+    <label>c₂</label><input id="c2" type="number" class="form-control">
+  `;
+}
+
 }
 
 // ==========================
@@ -122,6 +161,20 @@ function resolver() {
 
     case "exp-multi":
       pasos = multiplicarPotencias(str("base","a"), str("m","m"), str("n","n"));
+      break;
+  case "cramer-2x2":
+  pasos = cramer2x2(
+    num("a1"), num("b1"), num("c1"),
+    num("a2"), num("b2"), num("c2")
+  );
+  break;
+
+   case "cramer-3x3":
+      pasos = cramer3x3(
+        num("a1"), num("b1"), num("c1"), num("d1"),
+        num("a2"), num("b2"), num("c2"), num("d2"),
+        num("a3"), num("b3"), num("c3"), num("d3")
+      );
       break;
 
     case "exp-div":
@@ -202,7 +255,7 @@ function mostrarPasos(pasos: Paso[]) {
     resultadoDiv.innerHTML += `
       <div>
         <strong>Paso ${i + 1}:</strong> ${p.descripcion}<br>
-        <code>${p.expresion}</code>
+      <pre>${p.expresion}</pre>
       </div><hr>`;
   });
 }
